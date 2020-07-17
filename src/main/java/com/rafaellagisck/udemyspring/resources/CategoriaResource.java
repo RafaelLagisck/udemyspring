@@ -1,15 +1,25 @@
 package com.rafaellagisck.udemyspring.resources;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rafaellagisck.udemyspring.domain.Categoria;
+import com.rafaellagisck.udemyspring.services.CategoriaService;
+
 @RestController
 @RequestMapping(value="/categorias")
 public class CategoriaResource {
+	
+	@Autowired
+	CategoriaService categoriaService;
 
-	@RequestMapping(method=RequestMethod.GET)
-	public String listar() {
-		return "Rest está funcionando";
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+		Categoria categoria = categoriaService.buscarPorId(id);
+		return ResponseEntity.ok().body(categoria);
 	}
 }
