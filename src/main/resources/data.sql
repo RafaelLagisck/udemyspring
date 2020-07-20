@@ -10,3 +10,19 @@ INSERT INTO Produto_Categoria (produto_id, categoria_id) VALUES (1,2);
 INSERT INTO Produto_Categoria (produto_id, categoria_id) VALUES (2,2);
 INSERT INTO Produto_Categoria (produto_id, categoria_id) VALUES (3,1);
 
+INSERT INTO Estado (nome) VALUES ('São Paulo');
+INSERT INTO Estado (nome) VALUES ('Minaas Gerais');
+
+
+INSERT INTO Cidade (nome, estado_id) VALUES ('Presidente Prudente', 1);
+INSERT INTO Cidade (nome, estado_id) VALUES ('São Paulo', 1);
+
+INSERT INTO Cidade (nome, estado_id) VALUES ('Uberlândia', 2);
+INSERT INTO Cidade (nome, estado_id) VALUES ('Belo Horizonte', 2);
+
+
+
+
+
+
+
