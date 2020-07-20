@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rafaellagisck.udemyspring.domain.Categoria;
+import com.rafaellagisck.udemyspring.services.exceptions.ObjectNotFoundException;
 import com.rafaellagisck.udemyspring.repositories.CategoriaRepository;
 
 @Service
@@ -16,6 +17,7 @@ public class CategoriaService {
 	
 	public Categoria buscarPorId(Integer id) {
 		Optional<Categoria> categoria = categoriaRepository.findById(id);
-		return categoria.orElse(null);
+		return categoria.orElseThrow(() -> new ObjectNotFoundException(
+				"Objeto não encontrado! Id: "+ id + ", Tipo: " + Categoria.class.getName()));
 	}
 }
