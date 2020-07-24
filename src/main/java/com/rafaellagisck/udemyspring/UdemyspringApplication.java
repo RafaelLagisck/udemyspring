@@ -13,6 +13,7 @@ import com.rafaellagisck.udemyspring.domain.Cidade;
 import com.rafaellagisck.udemyspring.domain.Cliente;
 import com.rafaellagisck.udemyspring.domain.Endereco;
 import com.rafaellagisck.udemyspring.domain.Estado;
+import com.rafaellagisck.udemyspring.domain.ItemPedido;
 import com.rafaellagisck.udemyspring.domain.Pagamento;
 import com.rafaellagisck.udemyspring.domain.PagamentoComBoleto;
 import com.rafaellagisck.udemyspring.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.rafaellagisck.udemyspring.repositories.CidadeRepository;
 import com.rafaellagisck.udemyspring.repositories.ClienteRepository;
 import com.rafaellagisck.udemyspring.repositories.EnderecoRepository;
 import com.rafaellagisck.udemyspring.repositories.EstadoRepository;
+import com.rafaellagisck.udemyspring.repositories.ItemPedidoRepository;
 import com.rafaellagisck.udemyspring.repositories.PagamentoRepository;
 import com.rafaellagisck.udemyspring.repositories.PedidoRepository;
 import com.rafaellagisck.udemyspring.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class UdemyspringApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(UdemyspringApplication.class, args);
@@ -121,6 +126,18 @@ public class UdemyspringApplication implements CommandLineRunner {
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 		
+		ItemPedido ip1 = new ItemPedido(p1, ped1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(p3, ped1, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(p2, ped2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));	
 			
 	}
 
