@@ -2,6 +2,10 @@ package com.rafaellagisck.udemyspring.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
 import com.rafaellagisck.udemyspring.domain.Categoria;
 
 public class CategoriaDTO implements Serializable {
@@ -10,6 +14,8 @@ public class CategoriaDTO implements Serializable {
 	
 	private Integer id;
 	
+	@NotEmpty(message = "O campo nome deve ser preenchido")
+	@Length(min = 5, max = 80, message = "O campo nome de ter entre {min} e {max} caracteres")
 	private String nome;
 	
 	public CategoriaDTO () {

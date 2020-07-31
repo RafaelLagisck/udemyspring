@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.rafaellagisck.udemyspring.domain.Categoria;
+import com.rafaellagisck.udemyspring.dto.CategoriaDTO;
 import com.rafaellagisck.udemyspring.repositories.CategoriaRepository;
 import com.rafaellagisck.udemyspring.services.exceptions.DataIntegrityException;
 import com.rafaellagisck.udemyspring.services.exceptions.ObjectNotFoundException;
@@ -53,5 +54,10 @@ public class CategoriaService {
 	public Page<Categoria> buscarPage(Integer page, Integer linesPage, String orderBy, String direction){
 		PageRequest pageRequest = PageRequest.of(page, linesPage, Direction.valueOf(direction), orderBy);
 		return categoriaRepository.findAll(pageRequest);
+	}
+	
+	//Metodo Auxiliar transformar objeto DTO em objeto comum
+	public Categoria fromDTO(CategoriaDTO categoriaDTO) {
+		return new Categoria(categoriaDTO.getId(), categoriaDTO.getNome());
 	}
 }
