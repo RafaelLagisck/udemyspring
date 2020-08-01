@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.rafaellagisck.udemyspring.domain.Categoria;
+import com.rafaellagisck.udemyspring.domain.Categoria;
 import com.rafaellagisck.udemyspring.dto.CategoriaDTO;
 import com.rafaellagisck.udemyspring.repositories.CategoriaRepository;
 import com.rafaellagisck.udemyspring.services.exceptions.DataIntegrityException;
@@ -34,7 +35,14 @@ public class CategoriaService {
 	}
 
 	public Categoria atualizar(Categoria categoria) {
-		return categoriaRepository.save(categoria);
+		Categoria categoriaAtualizado = buscarPorId(categoria.getId());
+		atualizarCategoria(categoriaAtualizado, categoria);
+		return categoriaRepository.save(categoriaAtualizado);
+	}
+
+	private void atualizarCategoria(Categoria categoriaAtualizado, Categoria categoria) {
+		categoriaAtualizado.setNome(categoria.getNome());
+		
 	}
 
 	public void excluir(Integer id) {
