@@ -55,7 +55,7 @@ public class Cliente implements Serializable {
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
-		this.tipoCliente = tipoCliente.getId();
+		this.tipoCliente = (tipoCliente == null) ? null : tipoCliente.getId();
 	}
 
 	public Integer getId() {
