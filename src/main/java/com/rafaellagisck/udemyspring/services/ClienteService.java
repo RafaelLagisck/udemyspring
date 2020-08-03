@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rafaellagisck.udemyspring.domain.Categoria;
 import com.rafaellagisck.udemyspring.domain.Cidade;
@@ -23,6 +24,7 @@ import com.rafaellagisck.udemyspring.services.exceptions.DataIntegrityException;
 import com.rafaellagisck.udemyspring.services.exceptions.ObjectNotFoundException;
 import com.rafaellagisck.udemyspring.repositories.CidadeRepository;
 import com.rafaellagisck.udemyspring.repositories.ClienteRepository;
+import com.rafaellagisck.udemyspring.repositories.EnderecoRepository;
 
 @Service
 public class ClienteService {
@@ -33,14 +35,20 @@ public class ClienteService {
 	@Autowired 
 	private CidadeRepository cidadeRepository;
 	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+	
 	public Cliente buscarPorId(Integer id) {
 		Optional<Cliente> cliente = clienteRepository.findById(id);
 		return cliente.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: "+ id + ", Tipo: " + Cliente.class.getName()));
 	}
 	
+	@Transactional
 	public Cliente inserir(Cliente cliente) {
 		cliente.setId(null);
+		cliente = clienteRepository.save(cliente);
+		enderecoRepository.saveAll(cliente.getEnderecos());
 		return clienteRepository.save(cliente); 
 	}
 	
@@ -81,12 +89,18 @@ public class ClienteService {
 	}
 
 	public Cliente fromDTO(ClienteNovoDTO clienteNovoDTO) {
-		Cliente cliente = new Cliente(null, clienteNovoDTO.getNome(), clienteNovoDTO.getEmail(), 
-				clienteNovoDTO.getCpfOuCnpj(), TipoCliente.toEnum(clienteNovoDTO.getTipoCliente()));
-		
-		Optional<Cidade> cidade = cidadeRepository.findById(clienteNovoDTO.getIdCidade());
-		Endereco endereco = new Endereco(null, clienteNovoDTO.getLogradouro(), clienteNovoDTO.getNumero(), clienteNovoDTO.getComplemento(), clienteNovoDTO.getBairro(), clienteNovoDTO.getCep(),(Cidade)cidade, cliente);
-		return null;
+		Cliente cliente = new Cliente(null, clienteNovoDTO.getNome(), clienteNovoDTO.getEmail(), clienteNovoDTO.getCpfOuCnpj(), TipoCliente.toEnum(clienteNovoDTO.getTipoCliente()));
+		Cidade cidade = cidadeRepository.findById(clienteNovoDTO.getIdCidade()).get();
+		Endereco endereco = new Endereco(null, clienteNovoDTO.getLogradouro(), clienteNovoDTO.getNumero(), clienteNovoDTO.getComplemento(), clienteNovoDTO.getBairro(), clienteNovoDTO.getCep(), cidade, cliente);
+		cliente.getEnderecos().add(endereco);
+		cliente.getTelefones().add(clienteNovoDTO.getTel1());
+		if (clienteNovoDTO.getTel2()!=null) {
+			cliente.getTelefones().add(clienteNovoDTO.getTel2());
+		}
+		if (clienteNovoDTO.getTel3()!=null) {
+			cliente.getTelefones().add(clienteNovoDTO.getTel3());
+		}
+		return cliente;
 	}
 
 }
