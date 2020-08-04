@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import com.rafaellagisck.udemyspring.domain.Cliente;
+import com.rafaellagisck.udemyspring.services.validation.ClienteInsert;
 
 public class ClienteDTO implements Serializable {
 

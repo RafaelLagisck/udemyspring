@@ -2,28 +2,45 @@ package com.rafaellagisck.udemyspring.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.rafaellagisck.udemyspring.services.validation.ClienteInsert;
+
+@ClienteInsert
 public class ClienteNovoDTO  implements Serializable {
 
 	private static final long serialVersionUID = 1L; 
 
+	@NotEmpty(message = "O campo nome deve ser preenchido")
+	@Length(min = 5, max = 80, message = "O campo nome de ter entre {min} e {max} caracteres")
 	private String nome;
 
+	@NotEmpty(message = "O campo nome deve ser preenchido")
+	@Email(message = "Email inválido")
 	private String email;
 
+	@NotEmpty(message = "O campo nome deve ser preenchido")
 	private String cpfOuCnpj;
 
 	private Integer tipoCliente;
 
+	@NotEmpty(message = "O campo nome deve ser preenchido")
 	private String logradouro;
 
+	@NotEmpty(message = "O campo nome deve ser preenchido")
 	private String numero;
 
 	private String complemento;
 
 	private String bairro;
 
+	@NotEmpty(message = "O campo nome deve ser preenchido")
 	private String cep;
 	
+	@NotEmpty(message = "O campo nome deve ser preenchido")
 	private String tel1;
 
 	private String tel2;
