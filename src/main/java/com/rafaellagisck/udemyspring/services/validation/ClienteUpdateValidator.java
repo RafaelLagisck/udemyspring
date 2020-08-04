@@ -2,41 +2,47 @@ package com.rafaellagisck.udemyspring.services.validation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.HandlerMapping;
 
 import com.rafaellagisck.udemyspring.domain.Cliente;
 import com.rafaellagisck.udemyspring.domain.enums.TipoCliente;
+import com.rafaellagisck.udemyspring.dto.ClienteDTO;
 import com.rafaellagisck.udemyspring.dto.ClienteNovoDTO;
 import com.rafaellagisck.udemyspring.repositories.ClienteRepository;
 import com.rafaellagisck.udemyspring.resources.exceptions.FieldMessage;
 import com.rafaellagisck.udemyspring.services.validation.utils.BR;
 
-public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNovoDTO> {
+public class ClienteUpdateValidator implements ConstraintValidator<ClienteUpdate, ClienteDTO> {
 	
 	@Autowired
-	ClienteRepository clienteRepository;
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private HttpServletRequest request;
+	
 	
 	@Override
-	public void initialize(ClienteInsert ann) {
+	public void initialize(ClienteUpdate ann) {
 	}
 
 	@Override
-	public boolean isValid(ClienteNovoDTO clienteNovoDTO, ConstraintValidatorContext context) {
-		List<FieldMessage> list = new ArrayList<>();
-
-		if (clienteNovoDTO.getTipoCliente().equals(TipoCliente.PESSOAFISICA.getId()) && !BR.isValidCPF(clienteNovoDTO.getCpfOuCnpj())) {
-			list.add(new FieldMessage("cpfOuCnpj", "CPF Inválido"));
-
-		} 
-		if (clienteNovoDTO.getTipoCliente().equals(TipoCliente.PESSOAJURIDICA.getId()) && !BR.isValidCNPJ(clienteNovoDTO.getCpfOuCnpj())) {
-			list.add(new FieldMessage("cpfOuCnpj", "CNPJ Inválido"));
-		}
+	public boolean isValid(ClienteDTO clienteDTO, ConstraintValidatorContext context) {
 		
-		Cliente cliente = clienteRepository.findByEmail(clienteNovoDTO.getEmail());
-		if(cliente != null) {
+		Map<String, String> map = (Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+		
+		Integer uriId = Integer.parseInt(map.get("id"));
+		
+		List<FieldMessage> list = new ArrayList<>();
+		
+		Cliente cliente = clienteRepository.findByEmail(clienteDTO.getEmail());
+		if(cliente != null && !cliente.getId().equals(uriId)) {
 			list.add(new FieldMessage("email", "Email já existente na base de dados"));
 		}
 		// inclua os testes aqui, inserindo erros na lista
