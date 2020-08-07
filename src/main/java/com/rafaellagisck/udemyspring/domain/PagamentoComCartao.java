@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.rafaellagisck.udemyspring.domain.enums.EstadoPagamento;
 
 @Entity
-@JsonTypeName("pagamentoComCartão")
+@JsonTypeName("pagamentoComCartao")
 public class PagamentoComCartao extends Pagamento{
 	
 	private static final long serialVersionUID = 1L;

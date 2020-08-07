@@ -35,7 +35,7 @@ public class PedidoResource {
 	public ResponseEntity<Void> inserir(@Valid @RequestBody Pedido pedido){
 		pedido = pedidoService.inserir(pedido);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(categoria.getId())
+				.buildAndExpand(pedido.getId())
 				.toUri();
 		
 		return ResponseEntity.created(uri).build();
