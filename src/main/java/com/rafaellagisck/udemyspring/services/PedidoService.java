@@ -10,10 +10,10 @@ import com.rafaellagisck.udemyspring.domain.ItemPedido;
 import com.rafaellagisck.udemyspring.domain.PagamentoComBoleto;
 import com.rafaellagisck.udemyspring.domain.Pedido;
 import com.rafaellagisck.udemyspring.domain.enums.EstadoPagamento;
+import com.rafaellagisck.udemyspring.repositories.ClienteRepository;
 import com.rafaellagisck.udemyspring.repositories.ItemPedidoRepository;
 import com.rafaellagisck.udemyspring.repositories.PagamentoRepository;
 import com.rafaellagisck.udemyspring.repositories.PedidoRepository;
-import com.rafaellagisck.udemyspring.repositories.ProdutoRepository;
 import com.rafaellagisck.udemyspring.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -33,6 +33,9 @@ public class PedidoService {
 
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+	
+	@Autowired
+	private ClienteService clienteService;
 
 	public Pedido buscarPorId(Integer id) {
 		Optional<Pedido> pedido = pedidoRepository.findById(id);
@@ -43,6 +46,7 @@ public class PedidoService {
 	public Pedido inserir(Pedido pedido) {
 		pedido.setId(null);
 		pedido.setDataHoraPedido(new Date());
+		pedido.setCliente(clienteService.buscarPorId(pedido.getCliente().getId()));
 		pedido.getPagamento().setEstadoPagamento(EstadoPagamento.PENDENTE);
 		pedido.getPagamento().setPedido(pedido);
 		if (pedido.getPagamento() instanceof PagamentoComBoleto) {
@@ -55,10 +59,12 @@ public class PedidoService {
 
 		for (ItemPedido item : pedido.getItens()) {
 			item.setDesconto(0.0);
-			item.setPreco(produtoService.buscarPorId(item.getProduto().getId()).getPreco());
+			item.setProduto(produtoService.buscarPorId(item.getProduto().getId()));
+			item.setPreco(item.getProduto().getPreco());
 			item.setPedido(pedido);
 		}
 		itemPedidoRepository.saveAll(pedido.getItens());
+		System.out.println(pedido);
 		return pedido;
 	}
 }
