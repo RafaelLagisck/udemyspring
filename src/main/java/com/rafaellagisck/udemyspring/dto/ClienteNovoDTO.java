@@ -18,19 +18,22 @@ public class ClienteNovoDTO  implements Serializable {
 	@Length(min = 5, max = 80, message = "O campo nome de ter entre {min} e {max} caracteres")
 	private String nome;
 
-	@NotEmpty(message = "O campo nome deve ser preenchido")
+	@NotEmpty(message = "O campo email deve ser preenchido")
 	@Email(message = "Email inválido")
 	private String email;
 
-	@NotEmpty(message = "O campo nome deve ser preenchido")
+	@NotEmpty(message = "O campo cpf ou cnpj deve ser preenchido")
 	private String cpfOuCnpj;
 
 	private Integer tipoCliente;
+	
+	@NotEmpty(message = "O campo senha deve ser preenchido")
+	private String senha;
 
-	@NotEmpty(message = "O campo nome deve ser preenchido")
+	@NotEmpty(message = "O campo logradouro deve ser preenchido")
 	private String logradouro;
 
-	@NotEmpty(message = "O campo nome deve ser preenchido")
+	@NotEmpty(message = "O campo numero deve ser preenchido")
 	private String numero;
 
 	private String complemento;
@@ -83,6 +86,15 @@ public class ClienteNovoDTO  implements Serializable {
 
 	public void setTipoCliente(Integer tipoCliente) {
 		this.tipoCliente = tipoCliente;
+	}
+
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public String getLogradouro() {
