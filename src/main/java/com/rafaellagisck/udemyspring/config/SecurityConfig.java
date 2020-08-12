@@ -18,9 +18,15 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.rafaellagisck.udemyspring.security.JWTAuthenticationFilter;
+import com.rafaellagisck.udemyspring.security.JWTUtil;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	private JWTUtil jwtUtil;
 	
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -52,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(PUBLIC_MATCHES).permitAll()
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHES_GET).permitAll()
 			.anyRequest().authenticated();
+		httpSecurity.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
 		httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	
