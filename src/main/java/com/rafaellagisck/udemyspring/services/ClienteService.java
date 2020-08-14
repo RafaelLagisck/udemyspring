@@ -18,14 +18,17 @@ import com.rafaellagisck.udemyspring.domain.Categoria;
 import com.rafaellagisck.udemyspring.domain.Cidade;
 import com.rafaellagisck.udemyspring.domain.Cliente;
 import com.rafaellagisck.udemyspring.domain.Endereco;
+import com.rafaellagisck.udemyspring.domain.enums.Perfil;
 import com.rafaellagisck.udemyspring.domain.enums.TipoCliente;
 import com.rafaellagisck.udemyspring.dto.ClienteDTO;
 import com.rafaellagisck.udemyspring.dto.ClienteNovoDTO;
+import com.rafaellagisck.udemyspring.services.exceptions.AuthorizationException;
 import com.rafaellagisck.udemyspring.services.exceptions.DataIntegrityException;
 import com.rafaellagisck.udemyspring.services.exceptions.ObjectNotFoundException;
 import com.rafaellagisck.udemyspring.repositories.CidadeRepository;
 import com.rafaellagisck.udemyspring.repositories.ClienteRepository;
 import com.rafaellagisck.udemyspring.repositories.EnderecoRepository;
+import com.rafaellagisck.udemyspring.security.UserSS;
 
 @Service
 public class ClienteService {
@@ -43,6 +46,11 @@ public class ClienteService {
 	private EnderecoRepository enderecoRepository;
 	
 	public Cliente buscarPorId(Integer id) {
+		UserSS user = UserService.authenticated();
+		if(user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso Negado!");
+		}
+		
 		Optional<Cliente> cliente = clienteRepository.findById(id);
 		return cliente.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: "+ id + ", Tipo: " + Cliente.class.getName()));
